@@ -105,7 +105,19 @@ CREATE TABLE INSURANCE_POLICIES(
     SUM_ASSUARED NUMBER(8) NOT NULL,
     POLICY_BENEFITS VARCHAR(255) NOT NULL
     );
- 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- calling the procedure "remove_objects" to remove the Card_Details Table 
+    
+CALL remove_objects('Card_Details', 'Table');
+    Create Table Card_Details(
+  CID Number(10) Not Null  CONSTRAINT CID_PK PRIMARY KEY,
+  CARD_NAME VARCHAR2(50) Not Null Unique,
+  CARD_NUMBER VARCHAR2(16) Not Null,
+  EXPIRY_DATE Date Not Null,
+  CVV Number(10) Not Null
+
+); 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- calling the procedure "remove_objects" to remove the Customer Table 
@@ -127,19 +139,6 @@ CREATE TABLE Customer(
     Password Varchar2(50) NOT NULL UNIQUE
     );
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
--- calling the procedure "remove_objects" to remove the Card_Details Table 
-    
-CALL remove_objects('Card_Details', 'Table');
-    Create Table Card_Details(
-  CID Number(10) Not Null  CONSTRAINT CID_PK PRIMARY KEY,
-  CARD_NAME VARCHAR2(50) Not Null Unique,
-  CARD_NUMBER VARCHAR2(16) Not Null,
-  EXPIRY_DATE Date Not Null,
-  CVV Number(10) Not Null
-
-);
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -296,6 +295,41 @@ INSERT INTO Insurance_policies VALUES(30,'Government',330,10,'3y',36000,'Health 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+INSERT INTO card_details VALUES('1','Makenzie Richardson','7123576431937452','12-aug-2022','263');
+INSERT INTO card_details VALUES('2','Peter Addis','2582678692687262','4-nov-2024','260');
+INSERT INTO card_details VALUES('3','Wade Appleton','2525487267979379','18-oct-2023','422');
+INSERT INTO card_details VALUES('4','Lynn Young','5798689367998294','2-jan-2024','499');
+INSERT INTO card_details VALUES('5','Lindsay Clark','2687658973857093','12-feb-2024','366');
+INSERT INTO card_details VALUES('6','Raquel Carpenter','5798798173875573','4-aug-2024','973');
+INSERT INTO card_details VALUES('7','Moira Denton','5793897507085093','12-july-2022','903');
+INSERT INTO card_details VALUES('8','Sebastian Rycroft','8927409860820026','4-nov-2025','143');
+INSERT INTO card_details VALUES('9','Sebastian Morrison','6789287687208332','24-dec-2023','711');
+INSERT INTO card_details VALUES('10','Rocco Tailor','2556268783783783','9-nov-2024','424');
+INSERT INTO card_details VALUES('11','Tyson Chappell','5361698471974161','18-aug-2023','243');
+INSERT INTO card_details VALUES('12','Makena Willis','1967366532631651','14-nov-2025','223');
+INSERT INTO card_details VALUES('13','Mark Richardson','1647817508150823','8-oct-2024','452');
+INSERT INTO card_details VALUES('14','Angelina Young','1581750838048048','12-jan-2023','649');
+INSERT INTO card_details VALUES('15','Cadence Blackburn','6591598759874975','2-feb-2025','246');
+INSERT INTO card_details VALUES('16','Rick Bright','5789228084257654','14-aug-2025','943');
+INSERT INTO card_details VALUES('17','Domenic Knight','8197592797297522','8-july-2023','833');
+INSERT INTO card_details VALUES('18','Amelia Phillips','7592759792792793','14-nov-2024','192');
+INSERT INTO card_details VALUES('19','Kirsten Bell','2569826929952692','18-dec-2025','744');
+INSERT INTO card_details VALUES('20','Victoria Hood','6856826592797592','19-nov-2024','444');
+INSERT INTO card_details VALUES('21','Caleb Shields','2965265828386586','22-may-2024','853');
+INSERT INTO card_details VALUES('22','Alan Wild','5625927597297297','1-oct-2024','456');
+INSERT INTO card_details VALUES('23','Audrey Cox','1759739759379379','18-jan-2025','789');
+INSERT INTO card_details VALUES('24','Ada James','1649179719794171','12-aug-2025','234');
+INSERT INTO card_details VALUES('25','Cassandra Benfield','5619765917917511','7-april-2025','732');
+INSERT INTO card_details VALUES('26','Lucas Bradshaw','3875983725698723','4-july-2026','678');
+INSERT INTO card_details VALUES('27','Leanne Davies','1867592759759729','29-july-2025','433');
+INSERT INTO card_details VALUES('28','Michael Knight','6972857785975392','24-may-2025','199');
+INSERT INTO card_details VALUES('29','Susan Rosenbloom','8695619591791563','4-may-2025','469');
+INSERT INTO card_details VALUES('30','Erick Anderson','1786592837037953','19-may-2024','696');
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
     VALUES(1,'Makenzie Richardson','Miss Makenzie Richardson, South 527285300, Salem - 0000, Panama','22-AUG-93','612-334-4325','Makenzie_Richardson2063657414@twipet.com', 1,'Makenzie_Richardson2063657414@twipet.com','Northeastern@21');
 INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
@@ -352,40 +386,6 @@ Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EM
 Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (30,'Erick Anderson','Mr. Erick Anderson, Oxford 610904444, Escondido - 0000, Kosovo',to_date('17-JAN-01','DD-MON-RR'),'789-653-4521','Erick_Anderson1959329508@ovock.tech',1,500,1,30,'Done','Erick_Anderson1959329508@ovock.tech','Northeastern@50');
 Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (27,'Leanne Davies','Mrs. Leanne Davies, Marischal 1971766684, Denver - 0000, Vatican City',to_date('11-NOV-05','DD-MON-RR'),'564-986-3215','Leanne_Davies1656102163@acrit.org',10,550,2,27,'Done','Leanne_Davies1656102163@acrit.org','Northeastern@51');  
 
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-INSERT INTO card_details VALUES('1','Makenzie Richardson','7123576431937452','12-aug-2022','263');
-INSERT INTO card_details VALUES('2','Peter Addis','2582678692687262','4-nov-2024','260');
-INSERT INTO card_details VALUES('3','Wade Appleton','2525487267979379','18-oct-2023','422');
-INSERT INTO card_details VALUES('4','Lynn Young','5798689367998294','2-jan-2024','499');
-INSERT INTO card_details VALUES('5','Lindsay Clark','2687658973857093','12-feb-2024','366');
-INSERT INTO card_details VALUES('6','Raquel Carpenter','5798798173875573','4-aug-2024','973');
-INSERT INTO card_details VALUES('7','Moira Denton','5793897507085093','12-july-2022','903');
-INSERT INTO card_details VALUES('8','Sebastian Rycroft','8927409860820026','4-nov-2025','143');
-INSERT INTO card_details VALUES('9','Sebastian Morrison','6789287687208332','24-dec-2023','711');
-INSERT INTO card_details VALUES('10','Rocco Tailor','2556268783783783','9-nov-2024','424');
-INSERT INTO card_details VALUES('11','Tyson Chappell','5361698471974161','18-aug-2023','243');
-INSERT INTO card_details VALUES('12','Makena Willis','1967366532631651','14-nov-2025','223');
-INSERT INTO card_details VALUES('13','Mark Richardson','1647817508150823','8-oct-2024','452');
-INSERT INTO card_details VALUES('14','Angelina Young','1581750838048048','12-jan-2023','649');
-INSERT INTO card_details VALUES('15','Cadence Blackburn','6591598759874975','2-feb-2025','246');
-INSERT INTO card_details VALUES('16','Rick Bright','5789228084257654','14-aug-2025','943');
-INSERT INTO card_details VALUES('17','Domenic Knight','8197592797297522','8-july-2023','833');
-INSERT INTO card_details VALUES('18','Amelia Phillips','7592759792792793','14-nov-2024','192');
-INSERT INTO card_details VALUES('19','Kirsten Bell','2569826929952692','18-dec-2025','744');
-INSERT INTO card_details VALUES('20','Victoria Hood','6856826592797592','19-nov-2024','444');
-INSERT INTO card_details VALUES('21','Caleb Shields','2965265828386586','22-may-2024','853');
-INSERT INTO card_details VALUES('22','Alan Wild','5625927597297297','1-oct-2024','456');
-INSERT INTO card_details VALUES('23','Audrey Cox','1759739759379379','18-jan-2025','789');
-INSERT INTO card_details VALUES('24','Ada James','1649179719794171','12-aug-2025','234');
-INSERT INTO card_details VALUES('25','Cassandra Benfield','5619765917917511','7-april-2025','732');
-INSERT INTO card_details VALUES('26','Lucas Bradshaw','3875983725698723','4-july-2026','678');
-INSERT INTO card_details VALUES('27','Leanne Davies','1867592759759729','29-july-2025','433');
-INSERT INTO card_details VALUES('28','Michael Knight','6972857785975392','24-may-2025','199');
-INSERT INTO card_details VALUES('29','Susan Rosenbloom','8695619591791563','4-may-2025','469');
-INSERT INTO card_details VALUES('30','Erick Anderson','1786592837037953','19-may-2024','696');
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
