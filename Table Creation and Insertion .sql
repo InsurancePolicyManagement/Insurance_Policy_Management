@@ -95,6 +95,8 @@ CREATE TABLE Company(
 
 -- calling the procedure "remove_objects" to remove the INSURANCE_POLICIES Table
 
+-- calling the procedure "remove_objects" to remove the INSURANCE_POLICIES Table
+
 CALL remove_objects('INSURANCE_POLICIES', 'Table');   
 CREATE TABLE INSURANCE_POLICIES(
     POLICY_NUMBER NUMBER(10) CONSTRAINT IP_PK PRIMARY KEY,
@@ -105,10 +107,30 @@ CREATE TABLE INSURANCE_POLICIES(
     SUM_ASSUARED NUMBER(8) NOT NULL,
     POLICY_BENEFITS VARCHAR(255) NOT NULL
     );
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
--- calling the procedure "remove_objects" to remove the Card_Details Table 
     
+    
+     
+CALL remove_objects('Customer', 'Table');    
+CREATE TABLE Customer(
+    Customer_id NUMBER(10) CONSTRAINT Customer_PK PRIMARY KEY,
+    Customer_NAME VARCHAR(50) NOT NULL,
+    Date_of_Birth DATE NOT NULL,
+    Contact VARCHAR2(12) NOT NULL,
+    policy_number CONSTRAINT Cust_PN_FK REFERENCES INSURANCE_POLICIES(POLICY_NUMBER),
+    Premium NUMBER(8) Unique,
+    Employee_id NOT NULL CONSTRAINT Cust_EMP_FK REFERENCES entity_employee(Employee_ID),
+    card_id number(10) NOT NULL UNIQUE ,
+    Status Varchar2(5),
+    Login_email Varchar2(50) NOT NULL UNIQUE,
+    Password Varchar2(50) NOT NULL UNIQUE,
+    Gender Varchar(20),
+    City Varchar(20),
+    Street Varchar(20),
+    State Varchar(20),
+    Zipcode Number(20)
+    );
+-- calling the procedure "remove_objects" to remove the Card_Details Table 
+
 CALL remove_objects('Card_Details', 'Table');
     Create Table Card_Details(
   CID Number(10) Not Null  CONSTRAINT CID_PK PRIMARY KEY,
@@ -118,26 +140,8 @@ CALL remove_objects('Card_Details', 'Table');
   CVV Number(10) Not Null
 
 ); 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
 
--- calling the procedure "remove_objects" to remove the Customer Table 
-
-CALL remove_objects('Customer', 'Table');    
-CREATE TABLE Customer(
-    Customer_id NUMBER(10) CONSTRAINT Customer_PK PRIMARY KEY,
-    Customer_NAME VARCHAR(50) NOT NULL,
-    Address VARCHAR(255) NOT NULL,
-   Date_of_Birth DATE NOT NULL,
-    Contact VARCHAR2(12) NOT NULL,
-    Email VARCHAR2(50) NOT NULL,
-    policy_number CONSTRAINT Cust_PN_FK REFERENCES INSURANCE_POLICIES(POLICY_NUMBER),
-    Premium NUMBER(8) Unique,
-    Employee_id NOT NULL CONSTRAINT Cust_EMP_FK REFERENCES entity_employee(Employee_ID),
-    card_id CONSTRAINT Cust_card_FK REFERENCES card_details(cid),
-    Status Varchar2(5),
-    Login_email Varchar2(50) NOT NULL UNIQUE,
-    Password Varchar2(50) NOT NULL UNIQUE
-    );
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -330,61 +334,66 @@ INSERT INTO card_details VALUES('30','Erick Anderson','1786592837037953','19-may
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(1,'Makenzie Richardson','Miss Makenzie Richardson, South 527285300, Salem - 0000, Panama','22-AUG-93','612-334-4325','Makenzie_Richardson2063657414@twipet.com', 1,'Makenzie_Richardson2063657414@twipet.com','Northeastern@21');
-INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(2,	'Peter Addis',	'Mr. Peter Addis, Chamberlain  1869790298, Pittsburgh - 0000, Iraq',	'31-MAY-95',	'478-544-2613',	'Peter_Addis1226906224@grannar.com', 2, 'Peter_Addis1226906224@grannar.com',	'Northeastern@22');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(3,	'Wade Appleton',	'Mr. Wade Appleton, Geary 1004846676, Springfield - 0000, Peru',	'10-APR-91',	'027-766-6064',	'Wade_Appleton2129676548@gompie.com',			3,			'Wade_Appleton2129676548@gompie.com',	'Northeastern@23');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(4,	'Lynn Young	','Ms. Lynn Young, Monroe 1814285366, Zurich - 0000, Oman',	'09-MAR-91',	'313-661-0666',	'Lynn_Young1049801551@guentu.biz',			3,			'Lynn_Young1049801551@guentu.biz',	'Northeastern@24');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(5,	'Lindsay Clark ','	Mrs. Lindsay Clark, Durweston   1556898190, Bakersfield - 0000, Malaysia',	'24-DEC-99',	'682-072-2573',	'Lindsay_Clark1937253766@elnee.tech',			5,			'Lindsay_Clark1937253766@elnee.tech',	'Northeastern@25');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(6,	'Raquel Carpenter ','	Miss Raquel Carpenter, Cedarne  1649246313, Detroit - 0000, United Kingdom',	'19-FEB-89',	'177-408-6173',	'Raquel_Carpenter1337250263@nimogy.biz',			6,			'Raquel_Carpenter1337250263@nimogy.biz',	'Northeastern@26');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(7,	'Moira Denton ','	Ms. Moira Denton, Westcott  570638087, Bucharest - 0000, Croatia',	'18-FEB-06',	'035-486-5082',	'Moira_Denton1621390545@gmail.com',			7,			'Moira_Denton1621390545@gmail.com',	'Northeastern@27');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(8,	'Sebastian Rycroft','	Mr. Sebastian Rycroft, Chambers  2076759759, Innsbruck - 0000, France',	'18-JUL-96',	'425-716-0817',	'Sebastian_Rycroft812483468@brety.org',			8,			'Sebastian_Rycroft812483468@brety.org',	'Northeastern@28');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(9,	'Sebastian Morrison	','Mr. Sebastian Morrison, Canal  444698042, Minneapolis - 0000, Saint Vincent and the Grenadines',	'23-FEB-91',	'021-844-0144',	'Sebastian_Morrison1065165198@bretoux.com',			9,			'Sebastian_Morrison1065165198@bretoux.com',	'Northeastern@29');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(10,	'Rocco Tailor ','	Mr. Rocco Tailor, Besson  2003293710, Saint Paul - 0000, Oman',	'20-APR-04',	'624-800-5275',	'Rocco_Tailor1689568041@bulaffy.com',			10,			'Rocco_Tailor1689568041@bulaffy.com',	'Northeastern@30');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(11,	'Tyson Chappell	','Mr. Tyson Chappell, Norland  2076013518, Charlotte - 0000, Trinidad and Tobago',	'01-FEB-87',	'546-987-6569',	'Tyson_Chappell888199334@jiman.com',			2,			'Tyson_Chappell888199334@jiman.com',	'Northeastern@31');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(12,	'Makena Willis','	Mrs. Makena Willis, Cedarne  1237275124, Oklahoma City - 0000, Belgium',	'01-JUL-03',	'235-564-6564',	'Makena_Willis585382553@gompie.com',			1,			'Makena_Willis585382553@gompie.com',	'Northeastern@32');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(13,	'Mark Richardson ','	Mr. Mark Richardson, Thoresby   252660058, Lyon - 0000, Canada',	'09-SEP-96',	'789-564-2122',	'Mark_Richardson1680930294@irrepsy.com',			5,			'Mark_Richardson1680930294@irrepsy.com',	'Northeastern@33');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(14,	'Angelina Young','	Ms. Angelina Young, Ayres   112154772, Saint Paul - 0000, France',	'05-APR-01',	'457-897-2465',	'Angelina_Young1883813933@cispeto.com',			6,			'Angelina_Young1883813933@cispeto.com',	'Northeastern@34');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(15,	'Cadence Blackburn	','Ms. Cadence Blackburn, Timber   107753506, Escondido - 0000, Turkey',	'12-MAY-02',	'789-987-8521',	'Cadence_Blackburn1943268910@extex.org',		6,			'Cadence_Blackburn1943268910@extex.org',	'Northeastern@35');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(16,	'Rick Bright',' Mr. Rick Bright, East 1566520575, Toledo - 0000, Haiti',	'17-SEP-08',	'487-561-8965',	'Rick_Bright47520000@joiniaa.com',			2,			'Rick_Bright47520000@joiniaa.com',	'Northeastern@36');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(17,	'Domenic Knight ','	Mr. Domenic Knight, Bede  1077989712, Louisville - 0000, Israel',	'04-JAN-95',	'124-897-9860',	'Domenic_Knight2002797611@naiker.biz',			2,			'Domenic_Knight2002797611@naiker.biz',	'Northeastern@37');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(18,	'Amelia Phillips','	Ms. Amelia Phillips, Dutton   1055576511, Escondido - 0000, Switzerland',	'04-MAY-98',	'124-569-8000',	'Amelia_Phillips82892398@vetan.org',			5,			'Amelia_Phillips82892398@vetan.org',	'Northeastern@38');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(19,	'Kirsten Bell ','	Mrs. Kirsten Bell, Kilner   624061709, Santa Ana - 0000, Central African Republic',	'06-MAY-99',	'781-589-9632',	'Kirsten_Bell793718949@brety.org',			4	,		'Kirsten_Bell793718949@brety.org',	'Northeastern@39');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(20,	'Victoria Hood ','	Ms. Victoria Hood, South 862934190, Glendale - 0000, Algeria',	'08-MAR-95',	'123-456-7890',	'Victoria_Hood1734072221@gembat.biz',			4,			'Victoria_Hood1734072221@gembat.biz',	'Northeastern@40');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(21,	'Caleb Shields ','	Mr. Caleb Shields, Hampden  713904839, Charlotte - 0000, Central African Republic',	'02-OCT-98',	'458-965-8521',	'Caleb_Shields401362496@cispeto.com',			2,			'Caleb_Shields401362496@cispeto.com',	'Northeastern@41');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(22,	'Alan Wild','	Mr. Alan Wild, Fieldstone 1795520454, Tallahassee - 0000, East Timor (Timor-Leste)',	'07-SEP-03',	'124-965-8965',	'Alan_Wild780471328@hourpy.biz',			6,			'Alan_Wild780471328@hourpy.biz',	'Northeastern@42');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(23,	'Audrey Cox	',' Miss Audrey Cox, South 471021301, Madison - 0000, San Marino',	'05-JUN-91',	'785-654-9632',	'Audrey_Cox413450124@ubusive.com',			6,			'Audrey_Cox413450124@ubusive.com',	'Northeastern@43');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(24, 'Ada James','	Miss Ada James, Lincoln 1011139759, Rochester - 0000, Congo, Republic of the',	'08-FEB-85',	'784-569-3215',	'Ada_James316668414@bretoux.com',			6,			'Ada_James316668414@bretoux.com',	'Northeastern@44');    
-INSERT INTO customer(CUSTOMER_ID, CUSTOMER_NAME, ADDRESS, DATE_OF_BIRTH, CONTACT, Email,EMPLOYEE_ID,login_email,Password) 
-    VALUES(25,	'Cassandra Benfield','	Ms. Cassandra Benfield, Caroline  1524301778, Houston - 0000, Zambia',	'06-JAN-98',	'125-963-7895',	'Cassandra_Benfield1367201885@sheye.org',			6,			'Cassandra_Benfield1367201885@sheye.org',	'Northeastern@45');    
-Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (26,'Lucas Bradshaw','Mr. Lucas Bradshaw, Andrews 1996108851, Escondido - 0000, Saudi Arabia',to_date('17-AUG-87','DD-MON-RR'),'458-963-4521','Lucas_Bradshaw418027303@bauros.biz',14,240,4,26,'Wait','Lucas_Bradshaw418027303@bauros.biz','Northeastern@46');
-Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (28,'Michael Knight','Mr. Michael Knight, Yoakley 2010364703, Murfreesboro - 0000, Grenada',to_date('01-FEB-89','DD-MON-RR'),'456-963-7115','Michael_Knight865421450@brety.org',28,730,7,28,'Done','Michael_Knight865421450@brety.org','Northeastern@47');
-Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (29,'Susan Rosenbloom','Ms. Susan Rosenbloom, Blake 724518212, Lakewood - 0000, United Kingdom',to_date('13-APR-98','DD-MON-RR'),'458-963-8513','Susan_Rosenbloom537515968@dionrab.com',9,150,7,29,'Wait','Susan_Rosenbloom537515968@dionrab.com','Northeastern@48');
-Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (30,'Erick Anderson','Mr. Erick Anderson, Oxford 610904444, Escondido - 0000, Kosovo',to_date('17-JAN-01','DD-MON-RR'),'789-653-4521','Erick_Anderson1959329508@ovock.tech',1,500,1,30,'Done','Erick_Anderson1959329508@ovock.tech','Northeastern@50');
-Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EMAIL,POLICY_NUMBER,PREMIUM,EMPLOYEE_ID,CARD_ID,STATUS,LOGIN_EMAIL,PASSWORD) values (27,'Leanne Davies','Mrs. Leanne Davies, Marischal 1971766684, Denver - 0000, Vatican City',to_date('11-NOV-05','DD-MON-RR'),'564-986-3215','Leanne_Davies1656102163@acrit.org',10,550,2,27,'Done','Leanne_Davies1656102163@acrit.org','Northeastern@51');  
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode) 
+    VALUES(1,'Makenzie Richardson','22-AUG-93','612-334-4325', 1,1,'Makenzie_Richardson2063657414@twipet.com','Northeastern@21', 'M',	'New York',	'12 Smith Street',	'NY',	'02314');
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode) 
+    VALUES(2, 'Peter Addis', '31-MAY-95', '478-544-2613', 2,2, 'Peter_Addis1226906224@grannar.com',	'Northeastern@22', 'M',	'New Jersy', '23 Warner Street',	'NJ',	'01124');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(3,	'Wade Appleton',	'10-APR-91',	'027-766-6064',			3,3,			'Wade_Appleton2129676548@gompie.com',	'Northeastern@23', 'M',	'San Diego',	'37 Stephan Street',	'CA',	'01244');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(4,	'Lynn Young	',	'09-MAR-91',	'313-661-0666',				3,	4,		'Lynn_Young1049801551@guentu.biz',	'Northeastern@24', 'M',	'Boston', '58 QA Street',	'MA',	'02215');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(5,	'Lindsay Clark ',	'24-DEC-99',	'682-072-2573',				5,	5,		'Lindsay_Clark1937253766@elnee.tech',	'Northeastern@25', 'F',	'Atlanta',	'15 Heisenberg Street',	'GA',	'01456');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(6,	'Raquel Carpenter ', '19-FEB-89',	'177-408-6173', 6,6,			'Raquel_Carpenter1337250263@nimogy.biz',	'Northeastern@26', 'F',	'Worchester',	'45 RM Street',	'MA',	'01145');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(7,	'Moira Denton ',	'18-FEB-06',	'035-486-5082',				7,	7,		'Moira_Denton1621390545@gmail.com',	'Northeastern@27', 'F',	'Boston',	'Park Drive',	'MA',	'01425');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(8,	'Sebastian Rycroft',	'18-JUL-96',	'425-716-0817',				8,	8	,	'Sebastian_Rycroft812483468@brety.org',	'Northeastern@28', 'M',	'Lowell',	'13 Stark Street',	'MA',	'01225');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(9,	'Sebastian Morrison	',	'23-FEB-91',	'021-844-0144',			9,9,			'Sebastian_Morrison1065165198@bretoux.com',	'Northeastern@29', 'M',	'Dallas',	'JA Park',	'TX',	'14562');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(10,	'Rocco Tailor ', '20-APR-04',	'624-800-5275',			10,		10,	'Rocco_Tailor1689568041@bulaffy.com',	'Northeastern@30', 'M',	'Austin',	'OT Street',	'TX',	'01245');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(11,	'Tyson Chappell	', '01-FEB-87',	'546-987-6569',				2,11,			'Tyson_Chappell888199334@jiman.com',	'Northeastern@31', 'M',	'Chicago',	'NW Street',	'IL',	'01451');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(12,	'Makena Willis',	'01-JUL-03',	'235-564-6564'	,			1,12,			'Makena_Willis585382553@gompie.com',	'Northeastern@32', 'F',	'Seattle',	'JFK Street',	'WA',	'01052');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(13,	'Mark Richardson ',	'09-SEP-96',	'789-564-2122',				5,		13,	'Mark_Richardson1680930294@irrepsy.com',	'Northeastern@33', 'M',	'San Jose',	'SJSU Street',	'CA',	'02312');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(14,	'Angelina Young',	'05-APR-01',	'457-897-2465',			6,14,			'Angelina_Young1883813933@cispeto.com',	'Northeastern@34', 'F',	'Las Vegas',	'LV Street',	'NV',	'01455');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(15,	'Cadence Blackburn	',	'12-MAY-02',	'789-987-8521',			6,15,			'Cadence_Blackburn1943268910@extex.org',	'Northeastern@35', 'F',	'Penuelas',	'PR Street',	'PR',	'01245');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(16,	'Rick Bright',	'17-SEP-08',	'487-561-8965',				2,	16,		'Rick_Bright47520000@joiniaa.com',	'Northeastern@36', 'M',	'Sharon',	'SP Street',	'MA',	'04521');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(17,	'Domenic Knight ',	'04-JAN-95',	'124-897-9860',			2,	17,		'Domenic_Knight2002797611@naiker.biz',	'Northeastern@37', 'M',	'Troy',	'TD Street',	'NH',	'01451');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(18,	'Amelia Phillips',	'04-MAY-98',	'124-569-8000',				5,	18,		'Amelia_Phillips82892398@vetan.org',	'Northeastern@38', 'F',	'Lisbon',	'LT Street',	'NH',	'15463');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(19,	'Kirsten Bell ',	'06-MAY-99',	'781-589-9632',				4	,	19,	'Kirsten_Bell793718949@brety.org',	'Northeastern@39', 'F',	'Blaine',	'BG Street',	'ME',	'01452');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(20,	'Victoria Hood ',	'08-MAR-95',	'123-456-7890',				4,20,			'Victoria_Hood1734072221@gembat.biz',	'Northeastern@40', 'F',	'Fairfax',	'VT Street',	'VT',	'04512');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(21,	'Caleb Shields ',	'02-OCT-98',	'458-965-8521',			2,	21,		'Caleb_Shields401362496@cispeto.com',	'Northeastern@41', 'M',	'Red Bank',	'RB Street',	'NJ',	'01478');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(22,	'Alan Wild',	'07-SEP-03',	'124-965-8965',			6,	22,		'Alan_Wild780471328@hourpy.biz',	'Northeastern@42', 'M',	'Brooklyn',	'Watt Street',	'NY',	'01452');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(23,	'Audrey Cox	',	'05-JUN-91',	'785-654-9632',			6,	23,		'Audrey_Cox413450124@ubusive.com',	'Northeastern@43', 'F',	'Holmes',	'Roxbury',	'NY',	'01452');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(24, 'Ada James',	'08-FEB-85',	'784-569-3215',				6,	24,		'Ada_James316668414@bretoux.com',	'Northeastern@44', 'F',	'Robinson',	'TS Street',	'PA',	'07896');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME, DATE_OF_BIRTH, CONTACT,EMPLOYEE_ID,card_id,login_email,Password, Gender, City, Street, State, Zipcode)
+    VALUES(25,	'Cassandra Benfield',	'06-JAN-98',	'125-963-7895',			6,25,			'Cassandra_Benfield1367201885@sheye.org',	'Northeastern@45', 'F',	'Butler',	'BCG Street',	'PA',	'04213');    
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME,  DATE_OF_BIRTH, CONTACT,policy_number,premium ,EMPLOYEE_ID,card_id,status,login_email,Password, Gender, City, Street, State, Zipcode) 
+    values (26,'Lucas Bradshaw', '17-AUG-87','458-963-4521',14,240,4,26,'Wait','Lucas_Bradshaw418027303@bauros.biz','Northeastern@46', 'M',	'Reston',	'LA Street',	'VA',	'04451');
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME,  DATE_OF_BIRTH, CONTACT,policy_number,premium ,EMPLOYEE_ID,card_id,status,login_email,Password, Gender, City, Street, State, Zipcode) 
+    values (27,'Leanne Davies', '11-NOV-05','564-986-3215',10,550,2,27,'Done','Leanne_Davies1656102163@acrit.org','Northeastern@51', 'M',	'Laurel',	'MG Street',	'MD',	'21453');  
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME,  DATE_OF_BIRTH, CONTACT,policy_number,premium ,EMPLOYEE_ID,card_id,status,login_email,Password, Gender, City, Street, State, Zipcode) 
+    values (28,'Michael Knight', '01-FEB-89','456-963-7115',28,730,7,28,'Done','Michael_Knight865421450@brety.org','Northeastern@47', 'F',	'Lanexa',	'RG Street',	'VA',	'78512');
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME,  DATE_OF_BIRTH, CONTACT,policy_number,premium ,EMPLOYEE_ID,card_id,status,login_email,Password, Gender, City, Street, State, Zipcode) 
+    values (29,'Susan Rosenbloom','13-APR-98','458-963-8513',9,150,7,29,'Wait','Susan_Rosenbloom537515968@dionrab.com','Northeastern@48', 'M',	'Susan',	'NM Street',	'VA',	'03695');
+INSERT INTO Customer(CUSTOMER_ID, CUSTOMER_NAME,  DATE_OF_BIRTH, CONTACT,policy_number,premium ,EMPLOYEE_ID,card_id,status,login_email,Password, Gender, City, Street, State, Zipcode) 
+    values (30,'Erick Anderson','17-JAN-01','789-653-4521',1,500,1,30,'Done','Erick_Anderson1959329508@ovock.tech','Northeastern@50', 'F',	'Dowell',	'Beacon Street',	'MD',	'01452');
 
 
 
@@ -392,22 +401,22 @@ Insert into CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME,ADDRESS,DATE_OF_BIRTH,CONTACT,EM
 
 
 insert into policy_prerequisites values( 1, 1, 'Blood', 'Leucocyte Count','AV');
-insert into policy_prerequisites values( 2, 1, 'Diabties','Insulin_resistance', 'AV');
-insert into policy_prerequisites values( 3, 1, 'Lung','spirometry' ,'AV');
+
+
 insert into policy_prerequisites values( 4, 2, 'Lung','spirometry' ,'AV');
-insert into policy_prerequisites values( 5, 2, 'Diabties','Insulin_resistance', 'AV');
-insert into policy_prerequisites values( 6, 2, 'Blood', 'Leucocyte Count','AV');
+
+
 insert into policy_prerequisites values( 7, 3, 'Blood', 'Leucocyte Count','AV');
-insert into policy_prerequisites values( 8, 3, 'Diabties','Insulin_resistance','AV');
+
 insert into policy_prerequisites values( 9, 5, 'Diabties','Insulin_resistance','AV');
 insert into policy_prerequisites values( 10, 7, 'Blood', 'Leucocyte Count','AV');
-insert into policy_prerequisites values( 11, 7, 'Blood', 'Leucocyte Count','AV');
+
 insert into policy_prerequisites values( 12, 10, 'Blood', 'Leucocyte Count','AV');
 insert into policy_prerequisites values( 13, 14, 'Lung','spirometry','AV');
-insert into policy_prerequisites values( 14, 14, 'Diabties','Insulin_resistance','AV');
+
 insert into policy_prerequisites values( 15, 21, 'Diabties','Insulin_resistance','AV');
 insert into policy_prerequisites values( 16, 16, 'Blood', 'Leucocyte Count','AV');
-insert into policy_prerequisites values( 17, 21, 'Blood', 'Leucocyte Count','AV');
+
 insert into policy_prerequisites values( 18, 24, 'Diabties','Insulin_resistance','AV');
 insert into policy_prerequisites values( 19, 3, 'Diabties','Insulin_resistance','AV');
 insert into policy_prerequisites values( 20, 14, 'Blood', 'Leucocyte Count','AV');
