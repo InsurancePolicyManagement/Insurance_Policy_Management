@@ -1,20 +1,19 @@
 
 --------------------------------------------------Package Creation For Company Sign_up and Insurance_policies----------------------------------------------------------------
 
-create or replace PACKAGE Company_Ip_Package AS 
-
+create or replace PACKAGE Company_sign_in AS 
 Procedure C_signup(F_name in company.company_name%type, License_no in company.license_number%type, Create_date in company.created_date%type , user_name in admin.username%type, pass_word in admin.pasword%type, contact in admin.contact%type,c_email in admin.email_id%type);
- Procedure IP(Policy_tp insurance_policies.policy_type%type, prem insurance_policies.premium%type,c_code insurance_policies.c_code%type,
+Procedure IP(Policy_tp insurance_policies.policy_type%type, prem insurance_policies.premium%type,c_code insurance_policies.c_code%type,
 time_p insurance_policies.time_period%type, sum_ass insurance_policies.sum_assuared%type, policy_bene insurance_policies.policy_benefits%type, 
 pre_req_disease policy_prerequisites.prerequisite_disease%type,prereq_test policy_prerequisites.prerequisite_test_name%type );
 
-END Company_Ip_Package;
-
+END Company_sign_in;
+/
 
 
 --------------------------------------------------Package Body Creation For Company Sign_up and Insurance_policies(Procedures)----------------------------------------------------------------
 
-create or replace PACKAGE Body Company_Ip_Package AS 
+create or replace PACKAGE BODY Company_sign_in AS 
 Procedure C_signup(F_name in company.company_name%type, License_no in company.license_number%type, Create_date in company.created_date%type , user_name in admin.username%type, pass_word in admin.pasword%type, contact in admin.contact%type,c_email in admin.email_id%type)
 is 
 max_cc number;
@@ -24,14 +23,18 @@ maxcc number;
 Licenseno exception;
 date_error exception;
 countUnique number;
+countUnique1 number;
 license_len_error exception;
 contact_len_error exception;
 license_unique exception;
+Name_unique exception;
 email_invalid exception;
 COMPANY_ROW COMPANY%ROWTYPE;
 
 BEGIN
     select count(*) into countUnique from company where license_number=License_no;
+    select count(*) into countUnique1 from company where Company_name=F_name;
+    
     select Max(Company_code)into maxcc from company;
 select Max(system_id)into maxssid from admin;
     max_cc := maxcc +1;
@@ -40,16 +43,18 @@ select Max(system_id)into maxssid from admin;
 
     if (countUnique>0)
         then raise license_unique;
+        elsif(countUnique1>0) then
+        raise Name_unique;
     elsif length(License_no)<>12 
         then raise license_len_error;
 
     elsif check_email_pattern(c_email)=0
         then raise email_invalid;
-    elsif length(contact)<>10 
+    elsif length(contact)<>10
         then raise contact_len_error;
 
     else
-
+       
 
      insert into admin (System_id,
         name,
@@ -78,27 +83,29 @@ select Max(system_id)into maxssid from admin;
     max_ssid
     );
     end if;
-
-
+   
+    
     dbms_output.put_line('The company you have added is/n');
     select * into COMPANY_ROW from company where Company_Code = max_cc;
     dbms_output.put_line('Company_Code:'||company_row.company_code||' |Company_name '|| COMPANY_ROW.company_name||' |License Number' ||COMPANY_ROW.License_number|| ' | Created Date' ||COMPANY_ROW.created_date);
-
+    
 
 
     exception
     When License_Len_error Then
-        raise_application_error (-20001,'License number should be 12 Character ');
+        raise_application_error (-20001,'License number should be 10 Character ');
     When License_unique Then      
         raise_application_error (-20003,'License should be unique');
     When email_invalid Then
         raise_application_error (-20007,'Email pattern invalid');
        when Contact_Len_error Then
         raise_application_error (-20001,'Contact number should be 10 digits ');
-        END C_Signup;
-
-
-Procedure IP(Policy_tp insurance_policies.policy_type%type, prem insurance_policies.premium%type,c_code insurance_policies.c_code%type,
+       
+        when Name_unique then
+        raise_application_error (-20003,'Comapny Name should be unique');
+         END C_Signup;
+         
+         Procedure IP(Policy_tp insurance_policies.policy_type%type, prem insurance_policies.premium%type,c_code insurance_policies.c_code%type,
 time_p insurance_policies.time_period%type, sum_ass insurance_policies.sum_assuared%type, policy_bene insurance_policies.policy_benefits%type, 
 pre_req_disease policy_prerequisites.prerequisite_disease%type,prereq_test policy_prerequisites.prerequisite_test_name%type )
 is 
@@ -177,29 +184,25 @@ select Max(policy_prerequisite_test_code)into maxpptc from policy_prerequisites;
     when policy_wrong then
         raise_application_error(-20006,'Policy type must be entered as Private, Public or government');
     end IP;
-
-
-
-END Company_Ip_Package;
-
+END Company_sign_in;
+/
 
 
 --------------------------------------------------Package Creation For Customer Sign_up and Card Details Assignment----------------------------------------------------------------
 
-CREATE OR REPLACE PACKAGE Customer_sign_in AS 
+create or replace PACKAGE Customer_sign_in AS 
 Procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number);
 Procedure signup(s_email IN varchar, pass_word VARCHAR, F_name varchar, contact varchar, dob date, City varchar, street varchar, states varchar
-,zipcode number,Gender varchar,emp_id number);
+,zipcode number,Gender_I varchar,emp_id number);
 
 END Customer_sign_in;
-/
 
 
 --------------------------------------------------Package Body Creation For Customer Sign_up and Card Details Assignment----------------------------------------------------------------
 
-CREATE OR REPLACE PACKAGE BODY Customer_sign_in AS 
+create or replace PACKAGE BODY Customer_sign_in AS 
 Procedure signup(s_email IN varchar, pass_word VARCHAR, F_name varchar, contact varchar, dob date, City varchar, street varchar, states varchar
-,zipcode number,Gender varchar,emp_id number)
+,zipcode number,Gender_I varchar,emp_id number)
 is 
 max_cid number;
 maxcust_id number;
@@ -211,22 +214,35 @@ zipcode_notNumber exception;
 email_invalid exception;
 gender_notin exception;
 CUSTOMER_ROW CUSTOMER%ROWTYPE;
+ca_id number;
+max_ca_id number;
+countUnique1 number;
+password_unique exception;
+zipcode_Len_error exception;
 BEGIN
     select count(*) into countUnique from customer where login_email= s_email;
+    select count(*) into countUnique1 from customer where password= pass_word;
+    select max(card_id) into ca_id from customer;
+    max_ca_id := ca_id+1;
+    
     select Max(Customer_id)into maxcust_id from customer;
     max_cid := maxcust_id +1;
-
-    if IS_NUMBER(zipcode)=0
+    if(countUnique1>0)
+    then raise password_unique;
+    elsif IS_NUMBER(zipcode)=0
         then raise zipcode_notNumber;
+    elsif length(zipcode)<>5
+        then raise zipcode_Len_error;
     elsif (countUnique>0)
         then raise email_unique;
     elsif check_email_pattern(s_email)=0
         then raise email_invalid;
-    elsif length(contact)<>10 
+        elsif length(contact)<>10
         then raise contact_len_error;
-    elsif gender NOT IN('M','F')
+   
+    elsif gender_I NOT IN('M','F')
         then raise gender_notin;
-
+    
     else
         insert into customer (Customer_id,
         Customer_name,
@@ -238,6 +254,8 @@ BEGIN
     contact, 
     login_email,
     employee_id,
+    card_id,
+    gender,
     password)VALUES
     (max_cid,
     F_name,
@@ -249,31 +267,36 @@ BEGIN
     contact,
     s_email,
     emp_id,
+    max_ca_id,
+    gender_I,
     pass_word);
-
+    
     end if;
-
+    
      dbms_output.put_line('The customer you have added is');
     select * into Customer_ROW from CUSTOMER where CUSTOMER_ID = max_cid;
     dbms_output.put_line('CUSTOMER_ID:'||CUSTOMER_ROW.CUSTOMER_ID||' |CUSTOMER NAME:  '||CUSTOMER_ROW.CUSTOMER_NAME|| ' |DATE OF BIRTH:' ||CUSTOMER_ROW.DATE_OF_BIRTH|| ' | CONTACT:' ||CUSTOMER_ROW.CONTACT|| '| EMAIL:' ||CUSTOMER_ROW.Login_EMAIL|| '|GENDER:' ||CUSTOMER_ROW.GENDER|| '| CITY:' ||CUSTOMER_ROW.CITY|| '|STREET:'||CUSTOMER_ROW.STREET|| '|STATE:' ||CUSTOMER_ROW.STATE|| '| ZIPCODE:'||CUSTOMER_ROW.ZIPCODE );
-
-
+    
+    
     exception
     When Contact_Len_error Then
         raise_application_error (-20001,'Contact number should be 10 digits ');
     When Email_unique Then      
         raise_application_error (-20003,'Email should be unique');
     When gender_notin Then
-        raise_application_error (-20004,'Gender values should be m or f');
+        raise_application_error (-20004,'Gender values should be M or f');
     When ZIPCODE_NOTNUMBER Then
         raise_application_error (-20006,'ZIPCODE SHOULD CONTAIN ONLY NUMBERS');
     When email_invalid Then
         raise_application_error (-20007,'Email pattern invalid');
-
+      When password_unique Then      
+        raise_application_error (-20009,'Password should be unique');  
+        When zipcode_Len_error Then
+        raise_application_error (-20001,'Zipcode number should be 5 digits ');
         end signup;
+    
+     Procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number)
 
- Procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number)
-	
 		  IS
 		customer_card_id number;
         Card_id_error EXCEPTION;
@@ -293,9 +316,9 @@ BEGIN
         raise_application_error(-20001, 'CardId already exist in Database');
 
     END assign_card_details;
-    
-    
-    
+
+
+
     END Customer_sign_in;
 /
 
