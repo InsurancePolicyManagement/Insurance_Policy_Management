@@ -1,5 +1,119 @@
+SET SERVEROUTPUT ON;
+-- procedure created with arguments name_of_object & type_of_object (Table or Sequence) to remove the object everytime the script runs
+    /*
+    @param name_of_object VARCHAR2
+    @param type_of_object VARCHAR2
+    */
+CREATE OR REPLACE PROCEDURE remove_objects (
+    name_of_object VARCHAR2,
+    type_of_object VARCHAR2
+) IS
+    cnt NUMBER := 0;
+BEGIN
+    IF upper(type_of_object) = 'Procedure' THEN
+        SELECT
+            COUNT(*)
+        INTO cnt
+        FROM
+            user_procedure
+        WHERE
+            upper(procedure_name) = upper(TRIM(name_of_object));
+
+        IF cnt > 0 THEN
+            EXECUTE IMMEDIATE 'drop Procedure ' || name_of_object || ' cascade constraints';
+        END IF;
+    END IF;
+
+END;
+/
+
+
+----- procedure for  employee signup
+
+CALL remove_objects('signup_entity_employee', 'Procedure');
+
+create or replace Procedure signup_entity_employee(E_name in ENTITY_EMPLOYEE.NAME%type ,  E_contact in ENTITY_EMPLOYEE.CONTACT%type, e_email in ENTITY_EMPLOYEE.EMAIL_ID%type ,  E_username in admin.username%type, E_password in admin.pasword%type)
+is
+max_eid number;
+max_esid number;
+maxesid number;
+maxEmployeeId number;
+emailCount number;
+admin_name_count number;
+contact_number_error exception;
+emailId_unique exception;
+email_Invalid exception;
+same_name_error exception;
+e_ROW entity_employee%ROWTYPE;
+
+BEGIN 
+    select count(*) into emailCount from ENTITY_EMPLOYEE where EMAIL_ID= e_email;
+    select count(*) into admin_name_count from ENTITY_EMPLOYEE where NAME= E_name;
+    select Max(EMPLOYEE_ID)into maxEmployeeId from ENTITY_EMPLOYEE;
+    select Max(system_id)into maxesid from admin;
+    max_eid := maxEmployeeId +1;
+    max_esid := maxesid +1;
+    
+    if (emailCount>0)
+        then raise emailId_unique;
+    elsif (admin_name_count>0)
+        then raise same_name_error;
+    elsif check_email_pattern(e_email)=0
+        then raise email_invalid;
+    elsif  length(E_contact)<>10
+        then raise contact_number_error;
+        
+    else 
+        insert into admin(SYSTEM_ID,
+        name,
+        Username,
+        pasword,
+        contact,
+        email_id
+        )VALUES(max_esid,
+        E_name,
+        E_username,
+        E_password,
+        E_contact,
+        e_email
+        );
+    insert into ENTITY_EMPLOYEE (EMPLOYEE_ID,
+        NAME,
+        CONTACT,
+        EMAIL_ID,
+        System_id 
+        )VALUES
+        (max_eid,
+        E_name,
+        E_contact,
+        e_email,
+        max_esid
+        );
+        end if;
+        
+        select * into e_ROW from entity_employee where employee_ID = max_eid;
+    dbms_output.put_line('Employee_ID:'||e_ROW.employee_id||' |CEmployee Name:  '||e_ROW.name|| ' |Contact' ||e_ROW.contact|| ' | Email:' ||e_ROW.Email_id|| '| System_id:' ||e_ROW.System_id);
+    
+        exception
+    When contact_number_error Then
+        raise_application_error (-20001,'Contact number should not be less than 10');
+    When same_name_error then
+        raise_application_error (-20003,'Name should be unique');
+    When emailId_unique Then      
+        raise_application_error (-20003,'Email id should be unique');
+    When email_invalid Then
+        raise_application_error (-20007,'Email pattern invalid');
+        END signup_entity_employee;
+        /
+
+
+
+
+
+
 --Procedure For company signup
 
+CALL remove_objects('C_signup', 'Procedure');
 
 Create or replace Procedure C_signup(F_name in company.company_name%type, License_no in company.license_number%type, Create_date in company.created_date%type , user_name in admin.username%type, pass_word in admin.pasword%type, contact in admin.contact%type,c_email in admin.email_id%type)
 is 
@@ -90,6 +204,8 @@ select Max(system_id)into maxssid from admin;
 —————————————————————————————————————————————————————————————————————————————————————————————————
 --procedure for customer signup
 
+CALL remove_objects('signup', 'Procedure');
+
 create or replace Procedure signup(s_email IN varchar, pass_word VARCHAR, F_name varchar, contact varchar, dob date, City varchar, street varchar, states varchar
 ,zipcode number,Gender varchar,emp_id number)
 is 
@@ -177,7 +293,8 @@ BEGIN
 ——————————————————————————————————————————————————————————————————————————————
 --procedure for registering insurance policies 
     
-    set serveroutput on;
+CALL remove_objects('IP', 'Procedure');
+
 create or replace Procedure IP(Policy_tp insurance_policies.policy_type%type, prem insurance_policies.premium%type,c_code insurance_policies.c_code%type,
 time_p insurance_policies.time_period%type, sum_ass insurance_policies.sum_assuared%type, policy_bene insurance_policies.policy_benefits%type, 
 pre_req_disease policy_prerequisites.prerequisite_disease%type,prereq_test policy_prerequisites.prerequisite_test_name%type )
@@ -271,6 +388,8 @@ for row_show in (select company_name,policy_number, policy_type, premium,  time_
 ————————————————————————————————————————————————————————————————————————————————————————————————————————
 --Customer Selecting the policy
 
+CALL remove_objects('Customer_input', 'Procedure');
+
 Create or replace Procedure Customer_input( c_id customer.customer_id%type, Chosen_policy insurance_policies.policy_number%type) IS
 
 P_number insurance_policies.policy_number%type;
@@ -339,6 +458,7 @@ exception
 
 --Customer Bill:
 
+CALL remove_objects('billing', 'Procedure');
 
 create or replace procedure billing(c_id customer.customer_id%type) IS
 maxlid number;
@@ -391,6 +511,8 @@ select premium into bill from customer where customer_id= c_id;
  /—————————————————————————————————————————————————————————————————————————————————————————————————————
 --Customer transactions:
 
+CALL remove_objects('transactions', 'Procedure');
+
 create or replace procedure transactions(c_id customer.customer_id%type, t_type transaction_entity.transaction_type%type) is
 trans number;
 trans_max number;
@@ -419,6 +541,8 @@ end transactions;
 
 -- CArd Details Assignment:
 
+CALL remove_objects('assign_card_details', 'Procedure');
+
 create or replace procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number)
 	
 		  IS
@@ -440,6 +564,7 @@ create or replace procedure assign_card_details(cust_id number, cardName varchar
         raise_application_error(-20001, 'CardId already exist in Database');
 
     END assign_card_details;
+
 
 
 
