@@ -12,7 +12,6 @@ END Company_Ip_Package;
 
 
 
-————————————————————————————————————————————————————————————————————————————————————————————————————————
 --------------------------------------------------Package Body Creation For Company Sign_up and Insurance_policies(Procedures)----------------------------------------------------------------
 
 create or replace PACKAGE Body Company_Ip_Package AS 
@@ -182,3 +181,121 @@ select Max(policy_prerequisite_test_code)into maxpptc from policy_prerequisites;
 
 
 END Company_Ip_Package;
+
+
+
+--------------------------------------------------Package Creation For Customer Sign_up and Card Details Assignment----------------------------------------------------------------
+
+CREATE OR REPLACE PACKAGE Customer_sign_in AS 
+Procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number);
+Procedure signup(s_email IN varchar, pass_word VARCHAR, F_name varchar, contact varchar, dob date, City varchar, street varchar, states varchar
+,zipcode number,Gender varchar,emp_id number);
+
+END Customer_sign_in;
+/
+
+
+--------------------------------------------------Package Body Creation For Customer Sign_up and Card Details Assignment----------------------------------------------------------------
+
+CREATE OR REPLACE PACKAGE BODY Customer_sign_in AS 
+Procedure signup(s_email IN varchar, pass_word VARCHAR, F_name varchar, contact varchar, dob date, City varchar, street varchar, states varchar
+,zipcode number,Gender varchar,emp_id number)
+is 
+max_cid number;
+maxcust_id number;
+contact_len_error exception;
+date_error exception;
+email_unique exception;
+countUnique number;
+zipcode_notNumber exception;
+email_invalid exception;
+gender_notin exception;
+CUSTOMER_ROW CUSTOMER%ROWTYPE;
+BEGIN
+    select count(*) into countUnique from customer where login_email= s_email;
+    select Max(Customer_id)into maxcust_id from customer;
+    max_cid := maxcust_id +1;
+
+    if IS_NUMBER(zipcode)=0
+        then raise zipcode_notNumber;
+    elsif (countUnique>0)
+        then raise email_unique;
+    elsif check_email_pattern(s_email)=0
+        then raise email_invalid;
+    elsif length(contact)<>10 
+        then raise contact_len_error;
+    elsif gender NOT IN('M','F')
+        then raise gender_notin;
+
+    else
+        insert into customer (Customer_id,
+        Customer_name,
+    City,
+    Street,
+    State, 
+    Zipcode,
+    Date_of_Birth,
+    contact, 
+    login_email,
+    employee_id,
+    password)VALUES
+    (max_cid,
+    F_name,
+    City,
+    Street,
+    States,
+    Zipcode,
+    dob,
+    contact,
+    s_email,
+    emp_id,
+    pass_word);
+
+    end if;
+
+     dbms_output.put_line('The customer you have added is');
+    select * into Customer_ROW from CUSTOMER where CUSTOMER_ID = max_cid;
+    dbms_output.put_line('CUSTOMER_ID:'||CUSTOMER_ROW.CUSTOMER_ID||' |CUSTOMER NAME:  '||CUSTOMER_ROW.CUSTOMER_NAME|| ' |DATE OF BIRTH:' ||CUSTOMER_ROW.DATE_OF_BIRTH|| ' | CONTACT:' ||CUSTOMER_ROW.CONTACT|| '| EMAIL:' ||CUSTOMER_ROW.Login_EMAIL|| '|GENDER:' ||CUSTOMER_ROW.GENDER|| '| CITY:' ||CUSTOMER_ROW.CITY|| '|STREET:'||CUSTOMER_ROW.STREET|| '|STATE:' ||CUSTOMER_ROW.STATE|| '| ZIPCODE:'||CUSTOMER_ROW.ZIPCODE );
+
+
+    exception
+    When Contact_Len_error Then
+        raise_application_error (-20001,'Contact number should be 10 digits ');
+    When Email_unique Then      
+        raise_application_error (-20003,'Email should be unique');
+    When gender_notin Then
+        raise_application_error (-20004,'Gender values should be m or f');
+    When ZIPCODE_NOTNUMBER Then
+        raise_application_error (-20006,'ZIPCODE SHOULD CONTAIN ONLY NUMBERS');
+    When email_invalid Then
+        raise_application_error (-20007,'Email pattern invalid');
+
+        end signup;
+
+ Procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number)
+	
+		  IS
+		customer_card_id number;
+        Card_id_error EXCEPTION;
+        cnt number;
+    BEGIN
+    select card_id into customer_card_id from customer where CUSTOMER_ID=cust_id;
+        select COUNT(cid)into cnt from card_details where cid=customer_card_id ;
+
+        if(cnt>0) then
+         RAISE Card_id_error;
+
+		else 
+        insert into  card_details (cid,card_name,card_number, expiry_date,cvv) VALUES(customer_card_id,cardName,cardNumber,cardExpiryDate,cardCVV);
+          	end if;
+        EXCEPTION
+        WHEN Card_id_error THEN
+        raise_application_error(-20001, 'CardId already exist in Database');
+
+    END assign_card_details;
+    
+    
+    
+    END Customer_sign_in;
+/
+
