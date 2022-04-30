@@ -1,3 +1,15 @@
+set serveroutput on;
+-- trigger to update customer status
+CREATE OR REPLACE TRIGGER update_customer_status
+AFTER INSERT
+   ON Lab_order_line
+   FOR EACH ROW
+Begin
+        
+         UPDATE customer set status = 'Test' WHERE customer_id = :new.customer_id;
+        DBMS_OUTPUT.PUT_LINE('customer id - '  || ' is in testing status');
+END;
+/
 -- trigger to update transaction customer status
 CREATE OR REPLACE TRIGGER update_transaction_customer_status
 AFTER INSERT
