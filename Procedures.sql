@@ -414,3 +414,33 @@ for row_show in (select Transaction_id, transaction_type, Time_stamp, Customer_i
 end transactions;
 /
 
+
+——————————————————————————————————————————————————————————————————————————
+
+-- CArd Details Assignment:
+
+create or replace procedure assign_card_details(cust_id number, cardName varchar2, cardNumber varchar2, cardExpiryDate date, cardCVV number)
+	
+		  IS
+		customer_card_id number;
+        Card_id_error EXCEPTION;
+        cnt number;
+    BEGIN
+    select card_id into customer_card_id from customer where CUSTOMER_ID=cust_id;
+        select COUNT(cid)into cnt from card_details where cid=customer_card_id ;
+
+        if(cnt>0) then
+         RAISE Card_id_error;
+
+		else 
+        insert into  card_details (cid,card_name,card_number, expiry_date,cvv) VALUES(customer_card_id,cardName,cardNumber,cardExpiryDate,cardCVV);
+          	end if;
+        EXCEPTION
+        WHEN Card_id_error THEN
+        raise_application_error(-20001, 'CardId already exist in Database');
+
+    END assign_card_details;
+
+
+
+
