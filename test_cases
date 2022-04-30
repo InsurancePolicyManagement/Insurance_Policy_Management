@@ -10,3 +10,5 @@ exec customer_input(32,34);
 exec billing(32);
 ---Test case for viewing transactions by customer
 exec transactions(31,card);
+---- Test case for entity employee 
+exec signup_entity_employee('Sakshi', 9898912345, 'sakshi@gmail.com','Sakshi',1023456789 );
