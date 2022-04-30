@@ -12,3 +12,5 @@ exec billing(32);
 exec transactions(31,card);
 ---- Test case for entity employee 
 exec signup_entity_employee('Sakshi', 9898912345, 'sakshi@gmail.com','Sakshi',1023456789 );
+--- test case for assign card details
+exec assign_card_details(31,'Arjun',1122334455667788, '12/May/2025', 999);
